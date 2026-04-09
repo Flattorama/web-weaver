@@ -329,11 +329,11 @@ const Hero = () => (
         color: C.cream, fontWeight: 600, marginBottom: "32px", lineHeight: 1.3,
       }}
     >
-      The Honeyrunners{" "}
+      Tell It To Sweeney{" "}
       <span style={{ color: C.gold, fontFamily: fonts.heading, fontSize: "16px", letterSpacing: "2px" }}>
         &amp;
       </span>{" "}
-      Tell It To Sweeney
+      The Honeyrunners
     </p>
 
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "8px", marginBottom: "40px" }}>
@@ -344,7 +344,7 @@ const Hero = () => (
         Still Life Retreat &nbsp;·&nbsp; Durham, Ontario
       </p>
       <p style={{ fontFamily: fonts.body, fontSize: "14px", color: C.creamMuted, fontStyle: "italic", marginTop: "4px" }}>
-        Limited cabin space available &nbsp;·&nbsp; Leave No Trace event
+        Limited trailer space, very limited Airbnb room space. &nbsp;·&nbsp; Leave No Trace event
       </p>
     </div>
 
@@ -395,7 +395,7 @@ const Evening = () => (
           <h2 style={h2Style}>
             One Night. Two Bands.
             <br />
-            <span style={{ color: C.gold }}>A Town Frozen in Time.</span>
+            <span style={{ color: C.gold }}>An Event Frozen in Time.</span>
           </h2>
         </div>
       </RevealSection>
@@ -416,7 +416,7 @@ const Evening = () => (
               optional; they're the price of admission to the atmosphere.
             </p>
             <p style={{ marginBottom: "0" }}>
-              Cabin space is limited. The evening is intimate. And when the last note fades into
+              Stargazing space is available. Trailer space is available for a fee. Very limited Airbnb space is available. And when the last note fades into
               the trees, you'll wish the twenties never ended.
             </p>
           </div>
@@ -437,8 +437,8 @@ const Evening = () => (
           {[
             { icon: "🎭", title: "Costume Required", desc: "Flapper dresses, zoot suits, and all the jazz-age glamour you can muster." },
             { icon: "🌲", title: "Leave No Trace", desc: "We honour the land. Pack in, pack out, and leave only footprints." },
-            { icon: "🛖", title: "Limited Cabins", desc: "A handful of rustic cabins are available on a first-come basis." },
-            { icon: "🍽", title: "Light Food Served", desc: "Nourishment provided. Come hungry, leave satisfied." },
+            { icon: "🛖", title: "Very Limited Bed Spaces", desc: "Text 647-300-2442 to inquire. Please identify the event and yourself." },
+            { icon: "🍽", title: "Light Passed Hors d'oeuvres", desc: "Light passed hors d'oeuvres will be served." },
           ].map((item) => (
             <div key={item.title} style={{ padding: "24px 16px" }}>
               <div style={{ fontSize: "32px", marginBottom: "12px" }}>{item.icon}</div>
@@ -535,8 +535,20 @@ const Bands = () => (
       </RevealSection>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))", gap: "32px" }}>
         <BandCard
-          name="The Honeyrunners"
+          name="Tell It To Sweeney"
           delay={0.1}
+          description={[
+            "Energetic, genre-blending, and unapologetically original. This nine-piece ensemble fuses infectious grooves, catchy hooks, and heartfelt lyricism with a live show that moves you — body and soul.",
+            "Since 2017, Tell It To Sweeney has shared stages with David Wilcox and platinum-selling artist Coleman Hell, headlined Toronto's Beaches International Jazz Festival, and lit up festivals across Ontario.",
+            "With a growing fanbase and an ever-evolving sound, they continue to push creative boundaries while staying rooted in the energy and community that drives their music.",
+          ]}
+          links={[
+            { label: "Linktree", url: "https://linktr.ee/tellittosweeney" },
+          ]}
+        />
+        <BandCard
+          name="The Honeyrunners"
+          delay={0.2}
           description={[
             "A Northern take on Southern Soul — hot-blooded and rife with the poetry of human folly. The energy of this Toronto six-piece is undeniable on stage and on record.",
             "Fronted by songwriter Dan Dwoskin and anchored by Canadian-Peruvian engineer Guillermo Subauste, The Honeyrunners have shared a decade of stages with The Sadies, Bahamas, Joel Plaskett, Jim Cuddy, Terra Lightfoot, and many more. Their debut album on Gypsy Soul Records hit 150+ radio stations across four continents.",
@@ -546,18 +558,6 @@ const Bands = () => (
             { label: "Spotify", url: "https://open.spotify.com/artist/6sJKBtpEQZmSCSTb7LAtBZ" },
             { label: "Instagram", url: "https://www.instagram.com/honeyrunners" },
             { label: "YouTube", url: "https://www.youtube.com/honeyrunners" },
-          ]}
-        />
-        <BandCard
-          name="Tell It To Sweeney"
-          delay={0.2}
-          description={[
-            "Energetic, genre-blending, and unapologetically original. This nine-piece ensemble fuses infectious grooves, catchy hooks, and heartfelt lyricism with a live show that moves you — body and soul.",
-            "Since 2017, Tell It To Sweeney has shared stages with David Wilcox and platinum-selling artist Coleman Hell, headlined Toronto's Beaches International Jazz Festival, and lit up festivals across Ontario.",
-            "With a growing fanbase and an ever-evolving sound, they continue to push creative boundaries while staying rooted in the energy and community that drives their music.",
-          ]}
-          links={[
-            { label: "Linktree", url: "https://linktr.ee/tellittosweeney" },
           ]}
         />
       </div>
@@ -583,9 +583,8 @@ const Venue = () => (
         <DecoBorderFrame>
           <div style={{ ...bodyStyle, textAlign: "center" }}>
             <p style={{ marginBottom: "24px" }}>
-              Still Life Retreat sits on a private lake in Durham, Ontario — surrounded by
-              sprawling woodlands, gardens, and spacious meadows. Run by Jacques and
-              Jo-Anne Leroux, this rustic property is a tranquil oasis that transforms into
+              This rustic property sits on a private lake in Durham, Ontario — surrounded by
+              sprawling woodlands, gardens, and spacious meadows. A tranquil oasis that transforms into
               something entirely different when the sun goes down and the band takes the stage.
             </p>
             <p>
@@ -641,8 +640,7 @@ const Tickets = () => (
             <span style={{ color: C.gold }}>at the Table</span>
           </h2>
           <p style={{ ...bodyStyle, maxWidth: "560px", margin: "0 auto" }}>
-            Space is limited. Cabin accommodations are first-come, first-served.
-            All ticket holders must complete a waiver prior to the event.
+            Bed spaces are first-come, first-served and shared. The Airbnb accommodates up to 10 guests. There are 4 trailers sleeping up to 8 total. $100/person. All accommodation is at the discretion of the property owner. All ticket holders must complete a waiver prior to the event.
           </p>
         </div>
       </RevealSection>
@@ -660,7 +658,7 @@ const Tickets = () => (
               General Admission
             </p>
             <p style={{ fontFamily: fonts.display, fontSize: "48px", fontWeight: 700, color: C.cream, marginBottom: "8px" }}>
-              $<span style={{ color: C.gold }}>XX</span>
+              $<span style={{ color: C.gold }}>75</span>
             </p>
             <p style={{ ...bodyStyle, fontSize: "14px", marginBottom: "28px" }}>
               Entry to the evening. Music, food, and atmosphere included.
@@ -690,13 +688,13 @@ const Tickets = () => (
               Limited
             </div>
             <p style={{ fontFamily: fonts.heading, fontSize: "11px", letterSpacing: "3px", textTransform: "uppercase", color: C.creamMuted, marginBottom: "16px" }}>
-              Cabin Experience
+              Bed Space
             </p>
             <p style={{ fontFamily: fonts.display, fontSize: "48px", fontWeight: 700, color: C.cream, marginBottom: "8px" }}>
-              $<span style={{ color: C.gold }}>XX</span>
+              $<span style={{ color: C.gold }}>100</span>
             </p>
             <p style={{ ...bodyStyle, fontSize: "14px", marginBottom: "28px" }}>
-              Everything above, plus overnight cabin accommodation on the retreat grounds.
+              Bed and restroom access (shared).
             </p>
             <a
               href="#"
@@ -821,13 +819,13 @@ const FAQ = () => (
 
       <RevealSection delay={0.1}>
         <div style={{ maxWidth: "700px", margin: "0 auto" }}>
-          <FAQItem question="Do I really have to dress up?" answer="Absolutely. The Roaring Twenties theme isn't a suggestion — it's what makes the evening. Think flapper dresses, zoot suits, suspenders, feathered headbands, and fedoras. If you show up in jeans, you'll feel out of place — and that's by design." />
-          <FAQItem question="What about parking?" answer="There is parking available on the retreat grounds. Detailed directions and parking instructions will be sent to ticket holders closer to the event date." />
-          <FAQItem question="Can I camp on the property?" answer="Camping details are being finalized. Limited cabin space is available and included with the Cabin Experience ticket. General Admission ticket holders should plan for transportation home or check back for camping updates." />
-          <FAQItem question="Is there a refund policy?" answer="All ticket sales are final. In the event of cancellation due to weather or circumstances beyond our control, ticket holders will be contacted directly with options." />
-          <FAQItem question="Is the venue accessible?" answer="Still Life Retreat is a rustic outdoor property. While we strive to accommodate all guests, the terrain includes uneven ground, grass, and gravel. Please contact us directly if you have specific accessibility needs." />
-          <FAQItem question="What's the waiver about?" answer="All attendees must sign a release of liability waiver. This is a standard safety requirement for events held on private property. The waiver will be available digitally during the ticket checkout process." />
-          <FAQItem question="What time does the evening start and end?" answer="Doors and arrival times will be shared with ticket holders closer to August 15th. Plan for an evening affair — this isn't a matinee." />
+          <FAQItem question="Do I really have to dress up?" answer="Yes. Be your sparkly self in 20's gear." />
+          <FAQItem question="What about parking?" answer="Limited parking is available." />
+          <FAQItem question="Can I camp on the property?" answer="Stargazing is allowed in the meadow area behind the Barn." />
+          <FAQItem question="Is there a refund policy?" answer="No refunds for this artist-supporting event." />
+          <FAQItem question="Is the venue accessible?" answer="Much of the land is fairly flat and the house is fully wheelchair accessible. Please note that the surrounding fields are not wheelchair accessible." />
+          <FAQItem question="What's the waiver about?" answer='Still Life Retreat is a "Use at Own Risk" property — no lifeguards.' />
+          <FAQItem question="What time does the evening start and end?" answer="Feel free to join the property on Saturday after 6:00 pm and enjoy the sun and small beach area until Sunday at 6:00 pm." />
         </div>
       </RevealSection>
     </div>
