@@ -821,7 +821,7 @@ const FAQ = () => (
         <div style={{ maxWidth: "700px", margin: "0 auto" }}>
           <FAQItem question="Do I really have to dress up?" answer="Yes. Be your sparkly self in 20's gear." />
           <FAQItem question="What about parking?" answer="Limited parking is available." />
-          <FAQItem question="Can I camp on the property?" answer="Stargazing is allowed in the meadow area behind the Barn." />
+          <FAQItem question="<FAQItem question="Can I stargaze on the property?" answer="Stargazing is allowed in the meadow area behind the Barn." />" answer="Stargazing is allowed in the meadow area behind the Barn." />
           <FAQItem question="Is there a refund policy?" answer="No refunds for this artist-supporting event." />
           <FAQItem question="Is the venue accessible?" answer="Much of the land is fairly flat and the house is fully wheelchair accessible. Please note that the surrounding fields are not wheelchair accessible." />
           <FAQItem question="What's the waiver about?" answer='Still Life Retreat is a "Use at Own Risk" property — no lifeguards.' />
