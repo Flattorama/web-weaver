@@ -1,40 +1,40 @@
 
 
-## GitHub Pages Deployment via GitHub Actions
+## Apply 18 Content Changes from CSV Change Log
 
-### Problem
-GitHub Pages serves from a subpath (`/repo-name/`), not root. Vite needs a matching `base` config, and the router needs a matching `basename`. But Lovable preview must keep serving from `/`.
+All changes are in `src/pages/Index.tsx`. Here's what will be updated:
 
-### Changes
+### Hero Section (Changes 1–2)
+- **Swap band billing order** (line ~332): "Tell It To Sweeney" first, then "The Honeyrunners"
+- **Replace lodging subcopy** (line ~347): Change "Limited cabin space available" to "Limited trailer space, very limited Airbnb room space."
 
-**1. Update `vite.config.ts`**
-- Add a conditional `base` property: use env var `GITHUB_PAGES_BASE` or default to `"/"`.
-- In the GitHub Actions workflow, we'll set this to the repo name.
-- This way Lovable preview stays at `/` (no env var set), while GH Pages builds get the correct subpath.
+### The Evening Section (Changes 3–6)
+- **Headline** (line ~398): "A Town Frozen in Time." → "An Event Frozen in Time."
+- **Body copy** (line ~419): Update third paragraph to mention stargazing space, trailer space for a fee, and very limited Airbnb space
+- **Amenities card — Cabins** (line ~440): Replace "Limited Cabins" card with bed-space messaging: very limited bed spaces, text 647-300-2442, identify event and yourself
+- **Amenities card — Food** (line ~441): Change "Light Food Served" / "Nourishment provided..." to "Light Passed Hors d'oeuvres."
 
-**2. Update `src/App.tsx`**
-- Pass `basename` to `BrowserRouter` that reads from `import.meta.env.BASE_URL` (Vite injects the `base` value automatically). This keeps routing working on both Lovable and GitHub Pages.
+### Bands Section (Change 7)
+- **Swap band cards** (lines ~537–562): Move Tell It To Sweeney card first (left), Honeyrunners second (right)
 
-**3. Create `.github/workflows/deploy.yml`**
-- Triggers on push to `main`.
-- Steps: checkout → setup Node 20 → install deps → build with `GITHUB_PAGES_BASE` set to `/${{ github.event.repository.name }}/` → upload artifact → deploy to GitHub Pages.
-- Uses the official `actions/deploy-pages` action.
+### Venue Section (Change 8)
+- **Remove owners' names** (line ~587–589): Rewrite opening sentence to start with "This rustic..." removing "Jacques and Jo-Anne Leroux"
 
-### Technical Details
+### Tickets Section (Changes 9–11)
+- **Accommodation copy** (line ~644): Replace the description paragraph with full accommodation details: bed spaces first-come first-served, shared; 10 guests in Airbnb, 4 trailers sleeping up to 8; $100/person; at discretion of property owner
+- **General Admission price** (line ~663): Change `$XX` to `$75`
+- **Cabin Experience card** (line ~693–699): Change label to "Bed Space", update copy to "Bed and restroom access (shared)", price to `$100`
 
-```
-vite.config.ts:
-  base: process.env.GITHUB_PAGES_BASE || "/"
+### FAQ Section (Changes 12–18)
+- **Dress up** (line ~824): → "Yes. Be your sparkly self in 20's gear."
+- **Parking** (line ~825): → "Limited parking is available."
+- **Camping** (line ~826): → "Stargazing is allowed in the meadow area behind the Barn."
+- **Refund** (line ~827): → "No refunds for this artist-supporting event."
+- **Accessible** (line ~828): → "Much of the land is fairly flat and the house is fully wheelchair accessible. Please note that the surrounding fields are not wheelchair accessible."
+- **Waiver** (line ~829): → 'Still Life Retreat is a "Use at Own Risk" property — no lifeguards.'
+- **Start/end time** (line ~830): → "Feel free to join the property on Saturday after 6:00 pm and enjoy the sun and small beach area until Sunday at 6:00 pm."
 
-App.tsx:
-  <BrowserRouter basename={import.meta.env.BASE_URL}>
-
-deploy.yml:
-  - env: GITHUB_PAGES_BASE: /${{ github.event.repository.name }}/
-  - npm ci && npm run build
-  - actions/upload-pages-artifact (path: dist)
-  - actions/deploy-pages
-```
-
-The user will need to enable GitHub Pages in their repo settings (Settings → Pages → Source: GitHub Actions) after the first push.
+### Technical Notes
+- All 18 changes are text/content swaps and element reordering within `src/pages/Index.tsx`
+- No new files, dependencies, or structural changes needed
 
