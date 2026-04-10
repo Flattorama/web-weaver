@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import WaiverDialog from "@/components/WaiverDialog";
 
 // ─── PALETTE ────────────────────────────────────────────────────────────────
 const C = {
