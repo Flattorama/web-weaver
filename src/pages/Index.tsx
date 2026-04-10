@@ -698,98 +698,112 @@ const Venue = () => (
 );
 
 // ─── TICKETS SECTION ────────────────────────────────────────────────────────
-const Tickets = () => (
-  <section
-    id="tickets"
-    style={{ background: `linear-gradient(180deg, ${C.bg} 0%, ${C.bgDark} 100%)`, position: "relative" }}
-  >
-    <div style={sectionPadding}>
-      <RevealSection>
-        <div style={{ textAlign: "center", marginBottom: "48px" }}>
-          <p style={labelStyle}>Tickets</p>
-          <h2 style={h2Style}>
-            Secure Your Place{" "}
-            <span style={{ color: C.gold }}>at the Table</span>
-          </h2>
-          <p style={{ ...bodyStyle, maxWidth: "560px", margin: "0 auto" }}>
-            Bed spaces are first-come, first-served and shared. The Airbnb accommodates up to 10 guests. There are 4 trailers sleeping up to 8 total. $100/person. All accommodation is at the discretion of the property owner. All ticket holders must complete a waiver prior to the event.
-          </p>
-        </div>
-      </RevealSection>
+const Tickets = () => {
+  const [waiverOpen, setWaiverOpen] = useState(false);
+  const [selectedTicket, setSelectedTicket] = useState<{ type: string; label: string } | null>(null);
 
-      <RevealSection delay={0.15}>
-        <div
-          style={{
-            display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-            gap: "24px", maxWidth: "700px", margin: "0 auto",
-          }}
-        >
-          {/* General Admission */}
-          <div style={{ border: `1px solid ${C.border}`, padding: "40px 28px", textAlign: "center", background: "rgba(13,74,71,0.2)", position: "relative" }}>
-            <p style={{ fontFamily: fonts.heading, fontSize: "11px", letterSpacing: "3px", textTransform: "uppercase", color: C.creamMuted, marginBottom: "16px" }}>
-              General Admission
+  const handlePurchaseClick = (type: string, label: string) => {
+    setSelectedTicket({ type, label });
+    setWaiverOpen(true);
+  };
+
+  return (
+    <section
+      id="tickets"
+      style={{ background: `linear-gradient(180deg, ${C.bg} 0%, ${C.bgDark} 100%)`, position: "relative" }}
+    >
+      <div style={sectionPadding}>
+        <RevealSection>
+          <div style={{ textAlign: "center", marginBottom: "48px" }}>
+            <p style={labelStyle}>Tickets</p>
+            <h2 style={h2Style}>
+              Secure Your Place{" "}
+              <span style={{ color: C.gold }}>at the Table</span>
+            </h2>
+            <p style={{ ...bodyStyle, maxWidth: "560px", margin: "0 auto" }}>
+              Bed spaces are first-come, first-served and shared. The Airbnb accommodates up to 10 guests. There are 4 trailers sleeping up to 8 total. $100/person. All accommodation is at the discretion of the property owner. All ticket holders must complete a waiver prior to the event.
             </p>
-            <p style={{ fontFamily: fonts.display, fontSize: "48px", fontWeight: 700, color: C.cream, marginBottom: "8px" }}>
-              $<span style={{ color: C.gold }}>75</span>
-            </p>
-            <p style={{ ...bodyStyle, fontSize: "14px", marginBottom: "28px" }}>
-              Entry to the evening. Music, food, and atmosphere included.
-            </p>
-            <a
-              href="https://buy.stripe.com/test_14A5kx0dr5OjdcJ5Gg73G00"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: "inline-block", fontFamily: fonts.heading, fontSize: "12px",
-                letterSpacing: "3px", textTransform: "uppercase", color: C.bgAlt,
-                background: `linear-gradient(135deg, ${C.gold}, ${C.goldLight})`,
-                padding: "14px 36px", textDecoration: "none", transition: "all 0.3s ease",
-              }}
-            >
-              Purchase
-            </a>
           </div>
+        </RevealSection>
 
-          {/* Cabin Experience */}
-          <div style={{ border: `2px solid ${C.gold}`, padding: "40px 28px", textAlign: "center", background: "rgba(201,151,58,0.06)", position: "relative" }}>
-            <div
-              style={{
-                position: "absolute", top: "-12px", left: "50%", transform: "translateX(-50%)",
-                background: C.gold, color: C.bgAlt, fontFamily: fonts.heading,
-                fontSize: "9px", letterSpacing: "2px", textTransform: "uppercase", padding: "4px 16px",
-              }}
-            >
-              Limited
+        <RevealSection delay={0.15}>
+          <div
+            style={{
+              display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+              gap: "24px", maxWidth: "700px", margin: "0 auto",
+            }}
+          >
+            {/* General Admission */}
+            <div style={{ border: `1px solid ${C.border}`, padding: "40px 28px", textAlign: "center", background: "rgba(13,74,71,0.2)", position: "relative" }}>
+              <p style={{ fontFamily: fonts.heading, fontSize: "11px", letterSpacing: "3px", textTransform: "uppercase", color: C.creamMuted, marginBottom: "16px" }}>
+                General Admission
+              </p>
+              <p style={{ fontFamily: fonts.display, fontSize: "48px", fontWeight: 700, color: C.cream, marginBottom: "8px" }}>
+                $<span style={{ color: C.gold }}>75</span>
+              </p>
+              <p style={{ ...bodyStyle, fontSize: "14px", marginBottom: "28px" }}>
+                Entry to the evening. Music, food, and atmosphere included.
+              </p>
+              <button
+                onClick={() => handlePurchaseClick("general-admission", "General Admission")}
+                style={{
+                  display: "inline-block", fontFamily: fonts.heading, fontSize: "12px",
+                  letterSpacing: "3px", textTransform: "uppercase", color: C.bgAlt,
+                  background: `linear-gradient(135deg, ${C.gold}, ${C.goldLight})`,
+                  padding: "14px 36px", border: "none", cursor: "pointer", transition: "all 0.3s ease",
+                }}
+              >
+                Purchase
+              </button>
             </div>
-            <p style={{ fontFamily: fonts.heading, fontSize: "11px", letterSpacing: "3px", textTransform: "uppercase", color: C.creamMuted, marginBottom: "16px" }}>
-              Bed Space
-            </p>
-            <p style={{ fontFamily: fonts.display, fontSize: "48px", fontWeight: 700, color: C.cream, marginBottom: "8px" }}>
-              $<span style={{ color: C.gold }}>100</span>
-            </p>
-            <p style={{ ...bodyStyle, fontSize: "14px", marginBottom: "28px" }}>
-              Bed and restroom access (shared).
-            </p>
-            <a
-              href="https://buy.stripe.com/test_14A28le4h1y3dcJ0lW73G01"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: "inline-block", fontFamily: fonts.heading, fontSize: "12px",
-                letterSpacing: "3px", textTransform: "uppercase", color: C.bgAlt,
-                background: `linear-gradient(135deg, ${C.gold}, ${C.goldLight})`,
-                padding: "14px 36px", textDecoration: "none", transition: "all 0.3s ease",
-              }}
-            >
-              Purchase
-            </a>
-          </div>
-        </div>
-      </RevealSection>
 
-    </div>
-  </section>
-);
+            {/* Cabin Experience */}
+            <div style={{ border: `2px solid ${C.gold}`, padding: "40px 28px", textAlign: "center", background: "rgba(201,151,58,0.06)", position: "relative" }}>
+              <div
+                style={{
+                  position: "absolute", top: "-12px", left: "50%", transform: "translateX(-50%)",
+                  background: C.gold, color: C.bgAlt, fontFamily: fonts.heading,
+                  fontSize: "9px", letterSpacing: "2px", textTransform: "uppercase", padding: "4px 16px",
+                }}
+              >
+                Limited
+              </div>
+              <p style={{ fontFamily: fonts.heading, fontSize: "11px", letterSpacing: "3px", textTransform: "uppercase", color: C.creamMuted, marginBottom: "16px" }}>
+                Bed Space
+              </p>
+              <p style={{ fontFamily: fonts.display, fontSize: "48px", fontWeight: 700, color: C.cream, marginBottom: "8px" }}>
+                $<span style={{ color: C.gold }}>100</span>
+              </p>
+              <p style={{ ...bodyStyle, fontSize: "14px", marginBottom: "28px" }}>
+                Bed and restroom access (shared).
+              </p>
+              <button
+                onClick={() => handlePurchaseClick("bed-space", "Bed Space")}
+                style={{
+                  display: "inline-block", fontFamily: fonts.heading, fontSize: "12px",
+                  letterSpacing: "3px", textTransform: "uppercase", color: C.bgAlt,
+                  background: `linear-gradient(135deg, ${C.gold}, ${C.goldLight})`,
+                  padding: "14px 36px", border: "none", cursor: "pointer", transition: "all 0.3s ease",
+                }}
+              >
+                Purchase
+              </button>
+            </div>
+          </div>
+        </RevealSection>
+      </div>
+
+      {selectedTicket && (
+        <WaiverDialog
+          open={waiverOpen}
+          onOpenChange={setWaiverOpen}
+          ticketType={selectedTicket.type}
+          ticketLabel={selectedTicket.label}
+        />
+      )}
+    </section>
+  );
+};
 
 // ─── RULES OF THE HOUSE ─────────────────────────────────────────────────────
 const Rules = () => (
