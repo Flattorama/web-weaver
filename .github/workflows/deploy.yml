@@ -28,8 +28,6 @@ jobs:
       - run: bun install --frozen-lockfile
 
       - run: bun run build
-        env:
-          GITHUB_PAGES_BASE: /${{ github.event.repository.name }}/
 
       - uses: actions/upload-pages-artifact@v3
         with:
