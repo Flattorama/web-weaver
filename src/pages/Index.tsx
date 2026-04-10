@@ -535,10 +535,10 @@ const BandPhotoGallery = () => (
       }}
     >
       {[
-        { src: "/images/bands/honeyrunners-dan.jpg", alt: "Dan Dwoskin performing" },
-        { src: "/images/bands/honeyrunners-keys.jpg", alt: "The Honeyrunners live" },
-        { src: "/images/bands/honeyrunners-duo.jpg", alt: "The Honeyrunners on stage" },
-        { src: "/images/bands/honeyrunners-band.jpg", alt: "The Honeyrunners full band" },
+        { src: "/pictures/tits1.png", alt: "Tell It To Sweeney" },
+        { src: "/pictures/tits2.jpg", alt: "Tell It To Sweeney" },
+        { src: "/pictures/hr1.jpg", alt: "The Honeyrunners" },
+        { src: "/pictures/hr2.jpg", alt: "The Honeyrunners" },
       ].map((img) => (
         <div key={img.src} style={{ position: "relative", paddingBottom: "100%", overflow: "hidden", background: C.bgDark }}>
           <img
