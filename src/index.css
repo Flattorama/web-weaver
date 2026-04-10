@@ -96,3 +96,7 @@
 @media (min-width: 769px) {
   .nav-mobile-btn { display: none !important; }
 }
+
+@media (max-width: 600px) {
+  .band-photo-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
