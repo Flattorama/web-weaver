@@ -194,7 +194,7 @@ const Nav = () => {
         target="_blank"
         rel="noopener noreferrer"
         style={{
-          fontFamily: fonts.heading, fontSize: "13px", letterSpacing: "3px",
+          fontFamily: fonts.heading, fontSize: "15px", letterSpacing: "3px",
           textTransform: "uppercase", color: C.gold, cursor: "pointer", textDecoration: "none",
         }}
       >
@@ -208,7 +208,7 @@ const Nav = () => {
             href={link.href}
             onClick={(e) => { e.preventDefault(); scrollTo(link.href); }}
             style={{
-              fontFamily: fonts.heading, fontSize: "11px", letterSpacing: "2px",
+              fontFamily: fonts.heading, fontSize: "13px", letterSpacing: "2px",
               textTransform: "uppercase", color: C.creamMuted, textDecoration: "none",
               transition: "color 0.3s",
             }}
@@ -282,7 +282,7 @@ const Hero = () => (
   >
     <div
       style={{
-        position: "absolute", top: "20px", left: "20px", right: "20px", bottom: "20px",
+        position: "absolute", top: "60px", left: "20px", right: "20px", bottom: "20px",
         border: `1px solid ${C.border}`, pointerEvents: "none",
       }}
     >
