@@ -521,6 +521,68 @@ const BandCard = ({ name, description, links, delay = 0 }: { name: string; descr
   </RevealSection>
 );
 
+const BandPhotoGallery = () => (
+  <RevealSection delay={0.1}>
+    <div
+      className="band-photo-grid"
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(4, 1fr)",
+        gap: "4px",
+        marginBottom: "48px",
+        border: `1px solid ${C.border}`,
+        overflow: "hidden",
+      }}
+    >
+      {[
+        { src: "/images/bands/honeyrunners-dan.jpg", alt: "Dan Dwoskin performing" },
+        { src: "/images/bands/honeyrunners-keys.jpg", alt: "The Honeyrunners live" },
+        { src: "/images/bands/honeyrunners-duo.jpg", alt: "The Honeyrunners on stage" },
+        { src: "/images/bands/honeyrunners-band.jpg", alt: "The Honeyrunners full band" },
+      ].map((img) => (
+        <div key={img.src} style={{ position: "relative", paddingBottom: "100%", overflow: "hidden", background: C.bgDark }}>
+          <img
+            src={`${import.meta.env.BASE_URL}${img.src.replace(/^\//, "")}`}
+            alt={img.alt}
+            loading="lazy"
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              filter: "saturate(0.7) contrast(1.1)",
+              transition: "filter 0.4s ease, transform 0.6s ease",
+            }}
+            onMouseEnter={(e) => {
+              const el = e.currentTarget;
+              el.style.filter = "saturate(1) contrast(1.05)";
+              el.style.transform = "scale(1.05)";
+            }}
+            onMouseLeave={(e) => {
+              const el = e.currentTarget;
+              el.style.filter = "saturate(0.7) contrast(1.1)";
+              el.style.transform = "scale(1)";
+            }}
+          />
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              height: "2px",
+              background: `linear-gradient(90deg, transparent, ${C.gold}, transparent)`,
+              opacity: 0.5,
+            }}
+          />
+        </div>
+      ))}
+    </div>
+  </RevealSection>
+);
+
 const Bands = () => (
   <section id="bands" style={{ background: C.bg, position: "relative" }}>
     <div style={sectionPadding}>
@@ -533,6 +595,7 @@ const Bands = () => (
           </h2>
         </div>
       </RevealSection>
+      <BandPhotoGallery />
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))", gap: "32px" }}>
         <BandCard
           name="Tell It To Sweeney"
@@ -543,7 +606,11 @@ const Bands = () => (
             "With a growing fanbase and an ever-evolving sound, they continue to push creative boundaries while staying rooted in the energy and community that drives their music.",
           ]}
           links={[
-            { label: "Linktree", url: "https://linktr.ee/tellittosweeney" },
+            { label: "Spotify", url: "https://open.spotify.com/artist/3k3ISFCWFS2MRcp3epbs20" },
+            { label: "Instagram", url: "https://www.instagram.com/tellittosweeney" },
+            { label: "Facebook", url: "https://www.facebook.com/tellittosweeneyband" },
+            { label: "YouTube", url: "https://www.youtube.com/@tellittosweeney" },
+            { label: "TikTok", url: "https://www.tiktok.com/@tellittosweeneyband" },
           ]}
         />
         <BandCard
@@ -557,7 +624,9 @@ const Bands = () => (
           links={[
             { label: "Spotify", url: "https://open.spotify.com/artist/6sJKBtpEQZmSCSTb7LAtBZ" },
             { label: "Instagram", url: "https://www.instagram.com/honeyrunners" },
+            { label: "Facebook", url: "https://www.facebook.com/honeyrunners" },
             { label: "YouTube", url: "https://www.youtube.com/honeyrunners" },
+            { label: "TikTok", url: "https://www.tiktok.com/@honeyrunners" },
           ]}
         />
       </div>
@@ -595,7 +664,7 @@ const Venue = () => (
           </div>
           <div style={{ marginTop: "32px", textAlign: "center" }}>
             <p style={{ fontFamily: fonts.heading, fontSize: "12px", letterSpacing: "3px", textTransform: "uppercase", color: C.gold, marginBottom: "8px" }}>
-              394591 Concession 2, Durham, ON &nbsp;·&nbsp; N0G 1R0
+              394591 Concession 2, Durham, West Grey, ON
             </p>
           </div>
         </DecoBorderFrame>
@@ -611,7 +680,7 @@ const Venue = () => (
         >
           <iframe
             title="Still Life Retreat Location"
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2844.0!2d-80.82!3d44.32!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDTCsDE5JzEyLjAiTiA4MMKwNDknMTIuMCJX!5e0!3m2!1sen!2sca!4v1"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5689.0!2d-80.8133!3d44.1767!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s!2s394591+Concession+2,+Durham,+West+Grey,+ON!5e0!3m2!1sen!2sca!4v1"
             width="100%"
             height="360"
             style={{ border: 0, filter: "saturate(0.6) brightness(0.8) contrast(1.1)" }}
