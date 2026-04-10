@@ -1,21 +1,18 @@
 
 
-## Deploy to Custom Domain: event.stillliferetreat.com
+## Update Band Photo Gallery with Real Photos
 
-When using a custom domain with GitHub Pages, the site is served from `/` (not a repo subdirectory), so the `GITHUB_PAGES_BASE` override is no longer needed. We also need a `CNAME` file.
+Replace the 4 placeholder image paths with the actual files in `public/pictures/`.
 
-### Changes
+### Change in `src/pages/Index.tsx` (lines 537-541)
 
-1. **Create `public/CNAME`** — contains `event.stillliferetreat.com`. This gets copied to `dist/` during build so GitHub Pages knows the custom domain.
+Replace the image array with:
+```js
+{ src: "/pictures/tits1.png", alt: "Tell It To Sweeney" },
+{ src: "/pictures/tits2.jpg", alt: "Tell It To Sweeney" },
+{ src: "/pictures/hr1.jpg", alt: "The Honeyrunners" },
+{ src: "/pictures/hr2.jpg", alt: "The Honeyrunners" },
+```
 
-2. **Update `.github/workflows/deploy.yml`** (line 32) — remove the `GITHUB_PAGES_BASE` env var from the build step, since the site will be served at `/`.
-
-3. **Update `index.html`** — update `og:url` or any absolute URLs if present (quick audit needed, but likely none beyond the existing OG image URLs which are external).
-
-### DNS setup (manual, on your domain registrar)
-You'll need to add a `CNAME` record for `event` pointing to `<your-github-username>.github.io` at your DNS provider for `stillliferetreat.com`.
-
-### Files
-- `public/CNAME` (new)
-- `.github/workflows/deploy.yml` (edit line 30-32)
+One file edit, four lines changed.
 
