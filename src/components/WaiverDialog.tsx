@@ -36,8 +36,6 @@ const WaiverDialog = ({ open, onOpenChange, ticketType, ticketLabel }: WaiverDia
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [agreed, setAgreed] = useState(false);
-  const [section1, setSection1] = useState(false);
-  const [section2, setSection2] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [scrolledToBottom, setScrolledToBottom] = useState(false);
@@ -50,8 +48,6 @@ const WaiverDialog = ({ open, onOpenChange, ticketType, ticketLabel }: WaiverDia
       setPhone("");
       setAddress("");
       setAgreed(false);
-      setSection1(false);
-      setSection2(false);
       setError("");
       setScrolledToBottom(false);
     }
@@ -65,7 +61,7 @@ const WaiverDialog = ({ open, onOpenChange, ticketType, ticketLabel }: WaiverDia
     }
   };
 
-  const canSubmit = name.trim() && email.trim() && agreed && section1 && section2 && !loading;
+  const canSubmit = name.trim() && email.trim() && agreed && !loading;
 
   const handleSubmit = async () => {
     if (!canSubmit) return;
@@ -173,13 +169,7 @@ const WaiverDialog = ({ open, onOpenChange, ticketType, ticketLabel }: WaiverDia
               maxHeight: "40vh",
             }}
           >
-            <WaiverContent
-              showCheckboxes
-              section1Checked={section1}
-              onSection1Change={setSection1}
-              section2Checked={section2}
-              onSection2Change={setSection2}
-            />
+            <WaiverContent />
           </div>
           {/* Bottom fade */}
           {!scrolledToBottom && (
@@ -269,8 +259,7 @@ const WaiverDialog = ({ open, onOpenChange, ticketType, ticketLabel }: WaiverDia
                 lineHeight: 1.5,
               }}
             >
-              I have read the entire waiver, understand its contents, and voluntarily
-              agree to its terms and conditions.
+              I have read this Agreement in full, understand its contents, and voluntarily agree to its terms. I understand that I am waiving certain legal rights, including the right to bring legal claims.
             </span>
           </div>
 
