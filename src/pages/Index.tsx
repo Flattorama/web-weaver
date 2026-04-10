@@ -521,6 +521,68 @@ const BandCard = ({ name, description, links, delay = 0 }: { name: string; descr
   </RevealSection>
 );
 
+const BandPhotoGallery = () => (
+  <RevealSection delay={0.1}>
+    <div
+      className="band-photo-grid"
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(4, 1fr)",
+        gap: "4px",
+        marginBottom: "48px",
+        border: `1px solid ${C.border}`,
+        overflow: "hidden",
+      }}
+    >
+      {[
+        { src: "/images/bands/honeyrunners-dan.jpg", alt: "Dan Dwoskin performing" },
+        { src: "/images/bands/honeyrunners-keys.jpg", alt: "The Honeyrunners live" },
+        { src: "/images/bands/honeyrunners-duo.jpg", alt: "The Honeyrunners on stage" },
+        { src: "/images/bands/honeyrunners-band.jpg", alt: "The Honeyrunners full band" },
+      ].map((img) => (
+        <div key={img.src} style={{ position: "relative", paddingBottom: "100%", overflow: "hidden", background: C.bgDark }}>
+          <img
+            src={`${import.meta.env.BASE_URL}${img.src.replace(/^\//, "")}`}
+            alt={img.alt}
+            loading="lazy"
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              filter: "saturate(0.7) contrast(1.1)",
+              transition: "filter 0.4s ease, transform 0.6s ease",
+            }}
+            onMouseEnter={(e) => {
+              const el = e.currentTarget;
+              el.style.filter = "saturate(1) contrast(1.05)";
+              el.style.transform = "scale(1.05)";
+            }}
+            onMouseLeave={(e) => {
+              const el = e.currentTarget;
+              el.style.filter = "saturate(0.7) contrast(1.1)";
+              el.style.transform = "scale(1)";
+            }}
+          />
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              height: "2px",
+              background: `linear-gradient(90deg, transparent, ${C.gold}, transparent)`,
+              opacity: 0.5,
+            }}
+          />
+        </div>
+      ))}
+    </div>
+  </RevealSection>
+);
+
 const Bands = () => (
   <section id="bands" style={{ background: C.bg, position: "relative" }}>
     <div style={sectionPadding}>
