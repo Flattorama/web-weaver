@@ -189,15 +189,17 @@ const Nav = () => {
         display: "flex", justifyContent: "space-between", alignItems: "center",
       }}
     >
-      <div
+      <a
+        href="https://stillliferetreat.com"
+        target="_blank"
+        rel="noopener noreferrer"
         style={{
           fontFamily: fonts.heading, fontSize: "13px", letterSpacing: "3px",
-          textTransform: "uppercase", color: C.gold, cursor: "pointer",
+          textTransform: "uppercase", color: C.gold, cursor: "pointer", textDecoration: "none",
         }}
-        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       >
         Still Life Retreat
-      </div>
+      </a>
 
       <div style={{ display: "flex", gap: "32px" }} className="nav-desktop">
         {links.map((link) => (
@@ -341,7 +343,7 @@ const Hero = () => (
         Saturday, August 15, 2026
       </p>
       <p style={{ fontFamily: fonts.heading, fontSize: "12px", letterSpacing: "3px", textTransform: "uppercase", color: C.creamMuted }}>
-        Still Life Retreat &nbsp;·&nbsp; Durham, Ontario
+        <a href="https://stillliferetreat.com" target="_blank" rel="noopener noreferrer" style={{ color: "inherit", textDecoration: "none" }}>Still Life Retreat</a> &nbsp;·&nbsp; Durham, Ontario
       </p>
       <p style={{ fontFamily: fonts.body, fontSize: "14px", color: C.creamMuted, fontStyle: "italic", marginTop: "4px" }}>
         Limited trailer space, very limited Airbnb room space. &nbsp;·&nbsp; Leave No Trace event
@@ -404,7 +406,7 @@ const Evening = () => (
         <DecoBorderFrame>
           <div style={{ ...bodyStyle, textAlign: "center" }}>
             <p style={{ marginBottom: "24px" }}>
-              On a warm August evening, the grounds of Still Life Retreat transform into a
+              On a warm August evening, the grounds of <a href="https://stillliferetreat.com" target="_blank" rel="noopener noreferrer" style={{ color: C.gold, textDecoration: "none" }}>Still Life Retreat</a> transform into a
               jazz-age affair hidden deep in Ontario's Grey County. Ninety-two acres of private
               lakefront, gardens, and meadow become the backdrop for a night of soul, swing,
               and spectacle — dressed in flapper fringe and zoot-suit flair.
@@ -915,7 +917,7 @@ const SiteFooter = () => (
     <div style={{ display: "flex", gap: "24px", justifyContent: "center", flexWrap: "wrap", marginBottom: "32px" }}>
       {[
         { label: "Shannon Leroux", url: "https://www.shannonleroux.com" },
-        { label: "Still Life Retreat", url: "http://www.spiritual-love-inn.com" },
+        { label: "Still Life Retreat", url: "https://stillliferetreat.com" },
       ].map((link) => (
         <a
           key={link.label}
