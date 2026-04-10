@@ -733,7 +733,9 @@ const Tickets = () => (
               Entry to the evening. Music, food, and atmosphere included.
             </p>
             <a
-              href="#"
+              href="https://buy.stripe.com/test_14A5kx0dr5OjdcJ5Gg73G00"
+              target="_blank"
+              rel="noopener noreferrer"
               style={{
                 display: "inline-block", fontFamily: fonts.heading, fontSize: "12px",
                 letterSpacing: "3px", textTransform: "uppercase", color: C.bgAlt,
@@ -766,7 +768,9 @@ const Tickets = () => (
               Bed and restroom access (shared).
             </p>
             <a
-              href="#"
+              href="https://buy.stripe.com/test_14A28le4h1y3dcJ0lW73G01"
+              target="_blank"
+              rel="noopener noreferrer"
               style={{
                 display: "inline-block", fontFamily: fonts.heading, fontSize: "12px",
                 letterSpacing: "3px", textTransform: "uppercase", color: C.bgAlt,
@@ -780,13 +784,6 @@ const Tickets = () => (
         </div>
       </RevealSection>
 
-      <RevealSection delay={0.25}>
-        <p style={{ ...bodyStyle, fontSize: "14px", textAlign: "center", marginTop: "40px", fontStyle: "italic", opacity: 0.7 }}>
-          Ticket Tailor widget or Stripe Payment Link will be embedded here.
-          <br />
-          Waiver signing integrated into the checkout flow.
-        </p>
-      </RevealSection>
     </div>
   </section>
 );
