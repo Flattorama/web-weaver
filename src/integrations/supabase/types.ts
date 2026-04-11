@@ -62,7 +62,7 @@ export type Database = {
         }
         Relationships: []
       }
-      waiver_acceptances: {
+      waivers: {
         Row: {
           attendee_address: string | null
           attendee_email: string
