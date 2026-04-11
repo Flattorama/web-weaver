@@ -14,6 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
+      stripe_orders: {
+        Row: {
+          amount_subtotal: number | null
+          amount_total: number | null
+          checkout_session_id: string
+          created_at: string | null
+          currency: string | null
+          customer_email: string | null
+          customer_id: string | null
+          customer_name: string | null
+          id: number
+          payment_intent_id: string | null
+          payment_status: string | null
+          status: string | null
+          ticket_type: string | null
+        }
+        Insert: {
+          amount_subtotal?: number | null
+          amount_total?: number | null
+          checkout_session_id: string
+          created_at?: string | null
+          currency?: string | null
+          customer_email?: string | null
+          customer_id?: string | null
+          customer_name?: string | null
+          id?: number
+          payment_intent_id?: string | null
+          payment_status?: string | null
+          status?: string | null
+          ticket_type?: string | null
+        }
+        Update: {
+          amount_subtotal?: number | null
+          amount_total?: number | null
+          checkout_session_id?: string
+          created_at?: string | null
+          currency?: string | null
+          customer_email?: string | null
+          customer_id?: string | null
+          customer_name?: string | null
+          id?: number
+          payment_intent_id?: string | null
+          payment_status?: string | null
+          status?: string | null
+          ticket_type?: string | null
+        }
+        Relationships: []
+      }
       waiver_acceptances: {
         Row: {
           attendee_address: string | null

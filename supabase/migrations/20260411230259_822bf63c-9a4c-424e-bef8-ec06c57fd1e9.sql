@@ -1,0 +1,49 @@
+
+-- Fix search_path on trigger functions
+CREATE OR REPLACE FUNCTION trigger_waiver_sync()
+RETURNS trigger
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  payload jsonb;
+BEGIN
+  payload := jsonb_build_object('record', row_to_json(NEW), 'type', 'waiver');
+
+  PERFORM net.http_post(
+    url := 'https://srfvfknvhmxvxkmnnprp.supabase.co/functions/v1/google-sheets-sync',
+    headers := jsonb_build_object('Content-Type', 'application/json'),
+    body := payload::text
+  );
+
+  RETURN NEW;
+EXCEPTION WHEN OTHERS THEN
+  RAISE NOTICE 'Sync trigger failed: %', SQLERRM;
+  RETURN NEW;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION trigger_transaction_sync()
+RETURNS trigger
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  payload jsonb;
+BEGIN
+  payload := jsonb_build_object('record', row_to_json(NEW), 'type', 'transaction');
+
+  PERFORM net.http_post(
+    url := 'https://srfvfknvhmxvxkmnnprp.supabase.co/functions/v1/google-sheets-sync',
+    headers := jsonb_build_object('Content-Type', 'application/json'),
+    body := payload::text
+  );
+
+  RETURN NEW;
+EXCEPTION WHEN OTHERS THEN
+  RAISE NOTICE 'Sync trigger failed: %', SQLERRM;
+  RETURN NEW;
+END;
+$$;
