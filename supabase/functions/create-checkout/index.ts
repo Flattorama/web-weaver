@@ -52,7 +52,7 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
-    const { error: dbError } = await supabaseAdmin.from("waiver_acceptances").insert({
+    const { error: dbError } = await supabaseAdmin.from("waivers").insert({
       attendee_name: attendeeName,
       attendee_email: attendeeEmail,
       attendee_phone: attendeePhone || "",
