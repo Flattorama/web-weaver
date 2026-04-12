@@ -1,42 +1,43 @@
+## Fix: Add `apikey` Header to Trigger Functions
 
+### Problem
 
-## Fix Waiver Table Name & Re-create Triggers
+The `trigger_waiver_sync()` and `trigger_transaction_sync()` database functions use `pg_net` to call the edge function, but they omit the required `apikey` header. The Supabase gateway rejects these calls before they reach `google-sheets-sync`.
 
-**Issue:** The table is currently named `waiver_acceptances` but you want it named `waivers`. Additionally, the DB triggers were never created (they show as missing in the database state).
+### Solution
 
-### Step 1: New Database Migration
-A single migration that:
-- Renames `waiver_acceptances` → `waivers` (preserves all data and policies)
-- Re-creates the `trigger_waiver_sync()` trigger on the `waivers` table
-- Re-creates the `trigger_transaction_sync()` trigger on `stripe_orders` (also missing)
+A single database migration to recreate both trigger functions with the `apikey` header included, using the `SUPABASE_ANON_KEY` (safe since `verify_jwt = false`).
+
+### Migration SQL
 
 ```sql
-ALTER TABLE public.waiver_acceptances RENAME TO waivers;
+CREATE OR REPLACE FUNCTION public.trigger_waiver_sync()
+RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER
+SET search_path TO 'public' AS $$
+DECLARE payload jsonb;
+BEGIN
+  payload := jsonb_build_object('record', row_to_json(NEW), 'type', 'waiver');
+  PERFORM net.http_post(
+    url := 'https://srfvfknvhmxvxkmnnprp.supabase.co/functions/v1/google-sheets-sync',
+    headers := jsonb_build_object(
+      'Content-Type', 'application/json',
+      'apikey', '<ANON_KEY>'
+    ),
+    body := payload::text
+  );
+  RETURN NEW;
+EXCEPTION WHEN OTHERS THEN
+  RAISE NOTICE 'Sync trigger failed: %', SQLERRM;
+  RETURN NEW;
+END; $$;
 
-DROP TRIGGER IF EXISTS on_waiver_acceptance_insert ON waivers;
-CREATE TRIGGER on_waiver_acceptance_insert
-  AFTER INSERT ON waivers
-  FOR EACH ROW
-  EXECUTE FUNCTION trigger_waiver_sync();
-
-DROP TRIGGER IF EXISTS on_stripe_order_insert ON stripe_orders;
-CREATE TRIGGER on_stripe_order_insert
-  AFTER INSERT ON stripe_orders
-  FOR EACH ROW
-  EXECUTE FUNCTION trigger_transaction_sync();
+-- Same fix for trigger_transaction_sync()
 ```
 
-### Step 2: Update Edge Function Reference
-In `supabase/functions/create-checkout/index.ts`, change `.from("waiver_acceptances")` → `.from("waivers")`.
+### Files Changed
 
-### Step 3: Update Google Sheets Sync Edge Function
-Check and update any references in `supabase/functions/google-sheets-sync/index.ts` if needed.
+- New migration file only (no app code changes needed)
 
-### Note
-`src/integrations/supabase/types.ts` will auto-regenerate after the migration — no manual edit needed.
+### After Deploying
 
-### Files Modified
-- New migration SQL file
-- `supabase/functions/create-checkout/index.ts` (table name reference)
-- Redeploy both edge functions
-
+The existing 5 waiver rows were inserted before the fix, so they won't auto-sync. We should  backfill them with a one-time script so that we can see all of the waiver rows from before the fix populate into the connected Google Sheet
