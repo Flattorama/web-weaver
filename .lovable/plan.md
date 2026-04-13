@@ -1,43 +1,38 @@
-## Fix: Add `apikey` Header to Trigger Functions
 
-### Problem
 
-The `trigger_waiver_sync()` and `trigger_transaction_sync()` database functions use `pg_net` to call the edge function, but they omit the required `apikey` header. The Supabase gateway rejects these calls before they reach `google-sheets-sync`.
+## MailerLite Integration
 
-### Solution
+### What This Does
+Automatically syncs waiver submissions and Stripe purchases to MailerLite, adding subscribers to the correct group so you can manage email marketing segments.
 
-A single database migration to recreate both trigger functions with the `apikey` header included, using the `SUPABASE_ANON_KEY` (safe since `verify_jwt = false`).
+- **Waiver group ID**: `184592025467750052`
+- **Purchaser group ID**: `184592049528375065`
 
-### Migration SQL
+### Steps
 
-```sql
-CREATE OR REPLACE FUNCTION public.trigger_waiver_sync()
-RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER
-SET search_path TO 'public' AS $$
-DECLARE payload jsonb;
-BEGIN
-  payload := jsonb_build_object('record', row_to_json(NEW), 'type', 'waiver');
-  PERFORM net.http_post(
-    url := 'https://srfvfknvhmxvxkmnnprp.supabase.co/functions/v1/google-sheets-sync',
-    headers := jsonb_build_object(
-      'Content-Type', 'application/json',
-      'apikey', '<ANON_KEY>'
-    ),
-    body := payload::text
-  );
-  RETURN NEW;
-EXCEPTION WHEN OTHERS THEN
-  RAISE NOTICE 'Sync trigger failed: %', SQLERRM;
-  RETURN NEW;
-END; $$;
+**1. Store the MailerLite API key as a secret**
+Use the `add_secret` tool to store `MAILERLITE_API_KEY` plus two group ID secrets (`MAILERLITE_GROUP_ID_WAIVER`, `MAILERLITE_GROUP_ID_PURCHASER`).
 
--- Same fix for trigger_transaction_sync()
-```
+**2. Create the edge function** (`supabase/functions/mailerlite-sync/index.ts`)
+- Receives `{ record, type }` from DB triggers
+- Calls MailerLite's `POST /api/subscribers` to upsert the subscriber with name, email, phone, and custom fields (ticket_type, referral_code, amount_paid)
+- Assigns to the waiver or purchaser group based on `type`
+- Code as provided in your instructions above
+
+**3. Update `supabase/config.toml`**
+Add `[functions.mailerlite-sync]` with `verify_jwt = false`.
+
+**4. Database migration** — update trigger functions
+Recreate `trigger_waiver_sync()` and `trigger_transaction_sync()` to add a second `net.http_post` call targeting `mailerlite-sync`, with the `apikey` header included.
+
+Also recreate the triggers themselves (`on_waiver_acceptance_insert` on `waivers`, `on_stripe_order_insert` on `stripe_orders`) since the DB currently shows no triggers.
+
+**5. Backfill existing records**
+Call the `mailerlite-sync` edge function for each of the 5 existing waiver rows and any stripe_orders rows so historical data is synced to MailerLite.
 
 ### Files Changed
+- `supabase/functions/mailerlite-sync/index.ts` (new)
+- `supabase/config.toml` (add function config)
+- New migration SQL file (trigger updates)
+- No app code changes
 
-- New migration file only (no app code changes needed)
-
-### After Deploying
-
-The existing 5 waiver rows were inserted before the fix, so they won't auto-sync. We should  backfill them with a one-time script so that we can see all of the waiver rows from before the fix populate into the connected Google Sheet
