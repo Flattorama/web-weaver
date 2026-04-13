@@ -52,13 +52,20 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
-    const { error: dbError } = await supabaseAdmin.from("waivers").insert({
+    const waiverRecord = {
       attendee_name: attendeeName,
       attendee_email: attendeeEmail,
       attendee_phone: attendeePhone || "",
       attendee_address: attendeeAddress || "",
       ticket_type: ticketType,
       waiver_version: "v1.0_2026-08-15",
+    };
+
+    const waiverCreatedAt = new Date().toISOString();
+
+    const { error: dbError } = await supabaseAdmin.from("waivers").insert({
+      ...waiverRecord,
+      created_at: waiverCreatedAt,
     });
 
     if (dbError) {
@@ -68,6 +75,50 @@ serve(async (req) => {
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
+
+    console.log("Waiver inserted for checkout:", attendeeEmail, ticketType, waiverCreatedAt);
+
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+
+    const syncPayload = JSON.stringify({
+      record: {
+        ...waiverRecord,
+        created_at: waiverCreatedAt,
+      },
+      type: "waiver",
+    });
+
+    EdgeRuntime.waitUntil((async () => {
+      for (const [name, url] of [
+        ["google-sheets-sync", `${supabaseUrl}/functions/v1/google-sheets-sync`],
+        ["mailerlite-sync", `${supabaseUrl}/functions/v1/mailerlite-sync`],
+      ] as const) {
+        try {
+          console.log(`Starting ${name} sync for`, attendeeEmail);
+
+          const response = await fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              apikey: anonKey,
+              Authorization: `Bearer ${anonKey}`,
+            },
+            body: syncPayload,
+          });
+
+          if (!response.ok) {
+            console.error(`${name} failed:`, response.status, await response.text());
+            continue;
+          }
+
+          await response.text();
+          console.log(`${name} sync completed for`, attendeeEmail);
+        } catch (syncError) {
+          console.error(`${name} request failed:`, syncError);
+        }
+      }
+    })());
 
     // Create Stripe Checkout Session
     const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY")!, {
