@@ -38,7 +38,7 @@ BEGIN
   payload := jsonb_build_object('record', row_to_json(NEW), 'type', 'waiver');
 
   PERFORM net.http_post(
-    url := 'https://srfvfknvhmxvxkmnnprp.supabase.co/functions/v1/google-sheets-sync',
+    url := 'https://ikkqxadrlmyyawrcxhph.supabase.co/functions/v1/google-sheets-sync',
     headers := jsonb_build_object('Content-Type', 'application/json'),
     body := payload::text
   );
@@ -69,7 +69,7 @@ BEGIN
   payload := jsonb_build_object('record', row_to_json(NEW), 'type', 'transaction');
 
   PERFORM net.http_post(
-    url := 'https://srfvfknvhmxvxkmnnprp.supabase.co/functions/v1/google-sheets-sync',
+    url := 'https://ikkqxadrlmyyawrcxhph.supabase.co/functions/v1/google-sheets-sync',
     headers := jsonb_build_object('Content-Type', 'application/json'),
     body := payload::text
   );
