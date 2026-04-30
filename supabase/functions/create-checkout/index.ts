@@ -10,13 +10,13 @@ const corsHeaders = {
 
 const TICKETS: Record<string, { name: string; description: string; amount: number }> = {
   "general-admission": {
-    name: "General Admission",
-    description: "Entry to the evening. Music, food, and atmosphere included.",
+    name: "Early Bird General Admission",
+    description: "Entry to the evening. Early Bird offer available until May 5, 2026.",
     amount: 7500,
   },
   "bed-space": {
-    name: "Bed Space",
-    description: "Bed and restroom access (shared).",
+    name: "Shared Luxury Trailer Space",
+    description: "Shared luxury trailer space, per person per night.",
     amount: 10000,
   },
 };
@@ -27,10 +27,27 @@ serve(async (req) => {
   }
 
   try {
+    const supabaseUrl = Deno.env.get("SUPABASE_URL");
+    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
+    const stripeSecretKey = Deno.env.get("STRIPE_SECRET_KEY");
+
+    if (!supabaseUrl || !serviceRoleKey || !stripeSecretKey) {
+      console.error("Missing checkout configuration", {
+        hasSupabaseUrl: Boolean(supabaseUrl),
+        hasServiceRoleKey: Boolean(serviceRoleKey),
+        hasStripeSecretKey: Boolean(stripeSecretKey),
+      });
+
+      return new Response(
+        JSON.stringify({ error: "Checkout is not fully configured" }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     const { ticketType, attendeeName, attendeeEmail, attendeePhone, attendeeAddress } =
       await req.json();
 
-    // Validate
     if (!ticketType || !attendeeName || !attendeeEmail) {
       return new Response(
         JSON.stringify({ error: "Missing required fields: ticketType, attendeeName, attendeeEmail" }),
@@ -46,11 +63,7 @@ serve(async (req) => {
       );
     }
 
-    // Insert waiver acceptance
-    const supabaseAdmin = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-    );
+    const supabaseAdmin = createClient(supabaseUrl, serviceRoleKey);
 
     const waiverRecord = {
       attendee_name: attendeeName,
@@ -78,50 +91,50 @@ serve(async (req) => {
 
     console.log("Waiver inserted for checkout:", attendeeEmail, ticketType, waiverCreatedAt);
 
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+    if (anonKey) {
+      const syncPayload = JSON.stringify({
+        record: {
+          ...waiverRecord,
+          created_at: waiverCreatedAt,
+        },
+        type: "waiver",
+      });
 
-    const syncPayload = JSON.stringify({
-      record: {
-        ...waiverRecord,
-        created_at: waiverCreatedAt,
-      },
-      type: "waiver",
-    });
+      EdgeRuntime.waitUntil((async () => {
+        for (const [name, url] of [
+          ["google-sheets-sync", `${supabaseUrl}/functions/v1/google-sheets-sync`],
+          ["mailerlite-sync", `${supabaseUrl}/functions/v1/mailerlite-sync`],
+        ] as const) {
+          try {
+            console.log(`Starting ${name} sync for`, attendeeEmail);
 
-    EdgeRuntime.waitUntil((async () => {
-      for (const [name, url] of [
-        ["google-sheets-sync", `${supabaseUrl}/functions/v1/google-sheets-sync`],
-        ["mailerlite-sync", `${supabaseUrl}/functions/v1/mailerlite-sync`],
-      ] as const) {
-        try {
-          console.log(`Starting ${name} sync for`, attendeeEmail);
+            const response = await fetch(url, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                apikey: anonKey,
+                Authorization: `Bearer ${anonKey}`,
+              },
+              body: syncPayload,
+            });
 
-          const response = await fetch(url, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              apikey: anonKey,
-              Authorization: `Bearer ${anonKey}`,
-            },
-            body: syncPayload,
-          });
+            if (!response.ok) {
+              console.error(`${name} failed:`, response.status, await response.text());
+              continue;
+            }
 
-          if (!response.ok) {
-            console.error(`${name} failed:`, response.status, await response.text());
-            continue;
+            await response.text();
+            console.log(`${name} sync completed for`, attendeeEmail);
+          } catch (syncError) {
+            console.error(`${name} request failed:`, syncError);
           }
-
-          await response.text();
-          console.log(`${name} sync completed for`, attendeeEmail);
-        } catch (syncError) {
-          console.error(`${name} request failed:`, syncError);
         }
-      }
-    })());
+      })());
+    } else {
+      console.warn("SUPABASE_ANON_KEY is missing; skipping background sync calls");
+    }
 
-    // Create Stripe Checkout Session
-    const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY")!, {
+    const stripe = new Stripe(stripeSecretKey, {
       apiVersion: "2023-10-16",
     });
 
@@ -155,9 +168,10 @@ serve(async (req) => {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (err) {
+    const message = err instanceof Error ? err.message : "Internal server error";
     console.error("Edge function error:", err);
     return new Response(
-      JSON.stringify({ error: err.message || "Internal server error" }),
+      JSON.stringify({ error: message }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
