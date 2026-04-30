@@ -6,11 +6,8 @@ DECLARE payload jsonb;
 BEGIN
   payload := jsonb_build_object('record', row_to_json(NEW), 'type', 'waiver');
   PERFORM net.http_post(
-    url := 'https://srfvfknvhmxvxkmnnprp.supabase.co/functions/v1/google-sheets-sync',
-    headers := jsonb_build_object(
-      'Content-Type', 'application/json',
-      'apikey', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNyZnZma252aG14dnhrbW5ucHJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3OTg1NTQsImV4cCI6MjA5MTM3NDU1NH0.c7Bt6f4FPNoz5mlM5gc-XQpqlGJzBqQwoYliFwbTLuQ'
-    ),
+    url := 'https://ikkqxadrlmyyawrcxhph.supabase.co/functions/v1/google-sheets-sync',
+    headers := jsonb_build_object('Content-Type', 'application/json'),
     body := payload::text
   );
   RETURN NEW;
@@ -26,11 +23,8 @@ DECLARE payload jsonb;
 BEGIN
   payload := jsonb_build_object('record', row_to_json(NEW), 'type', 'transaction');
   PERFORM net.http_post(
-    url := 'https://srfvfknvhmxvxkmnnprp.supabase.co/functions/v1/google-sheets-sync',
-    headers := jsonb_build_object(
-      'Content-Type', 'application/json',
-      'apikey', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNyZnZma252aG14dnhrbW5ucHJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3OTg1NTQsImV4cCI6MjA5MTM3NDU1NH0.c7Bt6f4FPNoz5mlM5gc-XQpqlGJzBqQwoYliFwbTLuQ'
-    ),
+    url := 'https://ikkqxadrlmyyawrcxhph.supabase.co/functions/v1/google-sheets-sync',
+    headers := jsonb_build_object('Content-Type', 'application/json'),
     body := payload::text
   );
   RETURN NEW;
