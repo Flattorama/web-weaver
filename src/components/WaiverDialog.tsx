@@ -69,17 +69,25 @@ const WaiverDialog = ({ open, onOpenChange, ticketType, ticketLabel }: WaiverDia
     setError("");
 
     try {
-      const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
-      const anonKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
-      const url = `https://${projectId}.supabase.co/functions/v1/create-checkout`;
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL?.replace(/\/$/, "");
+      const publishableKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
-      const res = await fetch(url, {
+      if (!supabaseUrl) {
+        throw new Error("Checkout is not configured. Please contact the event team.");
+      }
+
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
+
+      if (publishableKey) {
+        headers.Authorization = `Bearer ${publishableKey}`;
+        headers.apikey = publishableKey;
+      }
+
+      const res = await fetch(`${supabaseUrl}/functions/v1/create-checkout`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${anonKey}`,
-          apikey: anonKey,
-        },
+        headers,
         body: JSON.stringify({
           ticketType,
           attendeeName: name.trim(),
@@ -89,11 +97,17 @@ const WaiverDialog = ({ open, onOpenChange, ticketType, ticketLabel }: WaiverDia
         }),
       });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to create checkout session");
-      if (data.url) {
-        window.location.href = data.url;
+      let data: { url?: string; error?: string } = {};
+      try {
+        data = await res.json();
+      } catch {
+        data = {};
       }
+
+      if (!res.ok) throw new Error(data.error || "Failed to create checkout session");
+      if (!data.url) throw new Error("Checkout did not return a payment link");
+
+      window.location.href = data.url;
     } catch (err: any) {
       setError(err.message || "Something went wrong. Please try again.");
       setLoading(false);
@@ -129,16 +143,16 @@ const WaiverDialog = ({ open, onOpenChange, ticketType, ticketLabel }: WaiverDia
         style={{
           background: C.bgAlt,
           border: `1px solid ${C.border}`,
-          maxHeight: "90vh",
+          width: "min(92vw, 672px)",
+          maxHeight: "min(92dvh, 760px)",
           display: "flex",
           flexDirection: "column",
           overflow: "hidden",
         }}
       >
-        {/* Sticky header */}
         <DialogHeader
           style={{
-            padding: "20px 24px",
+            padding: "18px 24px",
             borderBottom: `1px solid ${C.border}`,
             background: C.bgAlt,
             flexShrink: 0,
@@ -154,32 +168,33 @@ const WaiverDialog = ({ open, onOpenChange, ticketType, ticketLabel }: WaiverDia
               textAlign: "center",
             }}
           >
-            Liability Waiver Agreement — {ticketLabel}
+            Liability Waiver Agreement - {ticketLabel}
           </DialogTitle>
         </DialogHeader>
 
-        {/* Scrollable waiver body */}
-        <div style={{ position: "relative", flex: 1, minHeight: 0 }}>
-          <div
-            ref={scrollRef}
-            onScroll={handleScroll}
-            style={{
-              padding: "24px",
-              overflowY: "auto",
-              maxHeight: "40vh",
-            }}
-          >
+        <div
+          ref={scrollRef}
+          onScroll={handleScroll}
+          style={{
+            position: "relative",
+            flex: "1 1 auto",
+            minHeight: "160px",
+            overflowY: "auto",
+            WebkitOverflowScrolling: "touch",
+          }}
+        >
+          <div style={{ padding: "22px 24px" }}>
             <WaiverContent />
           </div>
-          {/* Bottom fade */}
           {!scrolledToBottom && (
             <div
               style={{
-                position: "absolute",
+                position: "sticky",
                 bottom: 0,
                 left: 0,
                 right: 0,
-                height: "60px",
+                height: "56px",
+                marginTop: "-56px",
                 background: `linear-gradient(transparent, ${C.bgAlt})`,
                 pointerEvents: "none",
               }}
@@ -187,16 +202,17 @@ const WaiverDialog = ({ open, onOpenChange, ticketType, ticketLabel }: WaiverDia
           )}
         </div>
 
-        {/* Form section */}
         <div
           style={{
-            padding: "20px 24px",
+            padding: "18px 24px calc(18px + env(safe-area-inset-bottom))",
             borderTop: `1px solid ${C.border}`,
             background: C.bgAlt,
             flexShrink: 0,
+            overflowY: "auto",
+            maxHeight: "48dvh",
           }}
         >
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "12px" }}>
+          <div className="waiver-form-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "12px" }}>
             <div>
               <label style={labelStyle}>Full Name *</label>
               <input
@@ -236,7 +252,6 @@ const WaiverDialog = ({ open, onOpenChange, ticketType, ticketLabel }: WaiverDia
             </div>
           </div>
 
-          {/* Agreement checkbox */}
           <div
             style={{
               display: "flex",
@@ -282,7 +297,7 @@ const WaiverDialog = ({ open, onOpenChange, ticketType, ticketLabel }: WaiverDia
               background: canSubmit
                 ? `linear-gradient(135deg, ${C.gold}, ${C.goldLight})`
                 : "rgba(201,151,58,0.15)",
-              padding: "14px 36px",
+              padding: "14px 28px",
               border: "none",
               cursor: canSubmit ? "pointer" : "not-allowed",
               transition: "all 0.3s ease",
