@@ -1,4 +1,7 @@
-project_id = "srfvfknvhmxvxkmnnprp"
+project_id = "ikkqxadrlmyyawrcxhph"
+
+[functions.create-checkout]
+verify_jwt = false
 
 [functions.google-sheets-sync]
 verify_jwt = false
