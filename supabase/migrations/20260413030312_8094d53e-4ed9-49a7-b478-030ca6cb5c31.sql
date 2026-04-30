@@ -8,21 +8,15 @@ BEGIN
   
   -- Google Sheets sync
   PERFORM net.http_post(
-    url := 'https://srfvfknvhmxvxkmnnprp.supabase.co/functions/v1/google-sheets-sync',
-    headers := jsonb_build_object(
-      'Content-Type', 'application/json',
-      'apikey', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNyZnZma252aG14dnhrbW5ucHJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3OTg1NTQsImV4cCI6MjA5MTM3NDU1NH0.c7Bt6f4FPNoz5mlM5gc-XQpqlGJzBqQwoYliFwbTLuQ'
-    ),
+    url := 'https://ikkqxadrlmyyawrcxhph.supabase.co/functions/v1/google-sheets-sync',
+    headers := jsonb_build_object('Content-Type', 'application/json'),
     body := payload::text
   );
 
   -- MailerLite sync
   PERFORM net.http_post(
-    url := 'https://srfvfknvhmxvxkmnnprp.supabase.co/functions/v1/mailerlite-sync',
-    headers := jsonb_build_object(
-      'Content-Type', 'application/json',
-      'apikey', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNyZnZma252aG14dnhrbW5ucHJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3OTg1NTQsImV4cCI6MjA5MTM3NDU1NH0.c7Bt6f4FPNoz5mlM5gc-XQpqlGJzBqQwoYliFwbTLuQ'
-    ),
+    url := 'https://ikkqxadrlmyyawrcxhph.supabase.co/functions/v1/mailerlite-sync',
+    headers := jsonb_build_object('Content-Type', 'application/json'),
     body := payload::text
   );
 
@@ -41,21 +35,15 @@ BEGIN
   
   -- Google Sheets sync
   PERFORM net.http_post(
-    url := 'https://srfvfknvhmxvxkmnnprp.supabase.co/functions/v1/google-sheets-sync',
-    headers := jsonb_build_object(
-      'Content-Type', 'application/json',
-      'apikey', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNyZnZma252aG14dnhrbW5ucHJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3OTg1NTQsImV4cCI6MjA5MTM3NDU1NH0.c7Bt6f4FPNoz5mlM5gc-XQpqlGJzBqQwoYliFwbTLuQ'
-    ),
+    url := 'https://ikkqxadrlmyyawrcxhph.supabase.co/functions/v1/google-sheets-sync',
+    headers := jsonb_build_object('Content-Type', 'application/json'),
     body := payload::text
   );
 
   -- MailerLite sync
   PERFORM net.http_post(
-    url := 'https://srfvfknvhmxvxkmnnprp.supabase.co/functions/v1/mailerlite-sync',
-    headers := jsonb_build_object(
-      'Content-Type', 'application/json',
-      'apikey', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNyZnZma252aG14dnhrbW5ucHJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3OTg1NTQsImV4cCI6MjA5MTM3NDU1NH0.c7Bt6f4FPNoz5mlM5gc-XQpqlGJzBqQwoYliFwbTLuQ'
-    ),
+    url := 'https://ikkqxadrlmyyawrcxhph.supabase.co/functions/v1/mailerlite-sync',
+    headers := jsonb_build_object('Content-Type', 'application/json'),
     body := payload::text
   );
 
