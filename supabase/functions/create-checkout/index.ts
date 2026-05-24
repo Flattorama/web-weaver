@@ -8,16 +8,12 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
-const TICKETS: Record<string, { name: string; description: string; amount: number }> = {
+const TICKETS: Record<string, { priceIdEnv: string }> = {
   "general-admission": {
-    name: "Early Bird General Admission",
-    description: "Entry to the evening. Early Bird offer available until May 5, 2026.",
-    amount: 7500,
+    priceIdEnv: "STRIPE_GENERAL_ADMISSION_PRICE_ID",
   },
   "bed-space": {
-    name: "Shared Luxury Trailer Space",
-    description: "Shared luxury trailer space, per person per night.",
-    amount: 10000,
+    priceIdEnv: "STRIPE_BED_SPACE_PRICE_ID",
   },
 };
 
@@ -60,6 +56,19 @@ serve(async (req) => {
       return new Response(
         JSON.stringify({ error: `Invalid ticket type: ${ticketType}` }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const stripePriceId = Deno.env.get(ticket.priceIdEnv);
+    if (!stripePriceId) {
+      console.error("Missing Stripe price configuration", {
+        ticketType,
+        priceIdEnv: ticket.priceIdEnv,
+      });
+
+      return new Response(
+        JSON.stringify({ error: "Checkout is not fully configured" }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
@@ -144,14 +153,7 @@ serve(async (req) => {
       customer_email: attendeeEmail,
       line_items: [
         {
-          price_data: {
-            currency: "cad",
-            product_data: {
-              name: ticket.name,
-              description: ticket.description,
-            },
-            unit_amount: ticket.amount,
-          },
+          price: stripePriceId,
           quantity: 1,
         },
       ],
